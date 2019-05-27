@@ -34,7 +34,7 @@ public class MailUtils {
     public static MimeMessage createVerifiedMail(Session session,String mail,int code)throws Exception {
         MimeMessage message = new MimeMessage(session);
         String content = "您的邮箱验证码是" + code + "。您正在使用该邮箱进行账户验证，请勿向任何人提供您收到的邮箱验证码，如非本人操作请忽略。";
-        message.setFrom(new InternetAddress("3111398755@qq.com"));
+        message.setFrom(new InternetAddress("123456@qq.com"));
         message.setRecipient(Message.RecipientType.TO, new InternetAddress(mail));
         message.setSubject("【九日云】账户验证");
         message.setContent(content, "text/html;charset=UTF-8");
