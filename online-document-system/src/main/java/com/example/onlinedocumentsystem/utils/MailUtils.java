@@ -9,8 +9,8 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class MailUtils {
-    public static final String EMAIL_PASSWORD = "weoldgfnkopldgah";
-    public static final String EMAIL_ACCOUNT = "3111398755";
+    public static final String EMAIL_PASSWORD = "123456";
+    public static final String EMAIL_ACCOUNT = "123455";
     public static final String QQ_SMTP_HOST = "smtp.qq.com";
     public static int sendMail(String mail) throws Exception {
         int code = (int)(Math.random()*1e7);
