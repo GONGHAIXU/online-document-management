@@ -6,10 +6,15 @@ import com.example.onlinedocumentsystem.service.UserService;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.example.onlinedocumentsystem.domain.User;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @RestController
 @EnableAutoConfiguration
 public class UserController {
@@ -51,21 +56,34 @@ public class UserController {
         }
         return result.toJSONString();
     }
-    @RequestMapping(value = "/register",method = RequestMethod.POST)
+    @RequestMapping(value = "/registerByMail",method = RequestMethod.POST)
     String registerByMail(@RequestBody User user){
         JSONObject result = new JSONObject();
         String  registerMessage = userService.register(user);
-        userService.sendMail(user);
+        if(!registerMessage.equals("邮箱已被占用"))
+            userService.sendMail(user);
         result.put("result",registerMessage);
         return result.toJSONString();
     }
-    @RequestMapping(value = "/verify",method = RequestMethod.GET)
-    String verify(@RequestParam int code){
+    @RequestMapping(value = "/registerByPhoneNumber",method = RequestMethod.POST)
+    String registerByPhoneNumber(HttpServletRequest request,@RequestBody User user){
+        JSONObject result = new JSONObject();
+        String  registerMessage = userService.register(user);
+        if(registerMessage.equals("true")){
+            String code = userService.sendMessage(user.getPhoneNumber());
+            HttpSession session = request.getSession();
+            session.setAttribute("code",code);
+            session.setMaxInactiveInterval(60*30);
+        }
+        result.put("result",registerMessage);
+        return result.toJSONString();
+    }
+    @RequestMapping(value = "/verifyByMail",method = RequestMethod.GET)
+    String verifyByMail(@RequestParam int code){
         JSONObject result = new JSONObject();
         User user;
-        if (null != userService.verify(code)){
-            user = userService.verify(code);
-            System.out.println(user.toString());
+        if (null != userService.verifyByMail(code)){
+            user = userService.verifyByMail(code);
             result = (JSONObject) JSON.toJSON(user);
             result.put("result","true");
         }
@@ -73,5 +91,9 @@ public class UserController {
             result.put("result","false");
         }
         return result.toJSONString();
+    }
+    @RequestMapping(value = "/helloWorld",method = RequestMethod.GET)
+    String HelloWorld(){
+        return "helloWorld.html";
     }
 }

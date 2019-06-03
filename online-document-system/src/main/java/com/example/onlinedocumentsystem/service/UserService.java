@@ -1,7 +1,9 @@
 package com.example.onlinedocumentsystem.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.example.onlinedocumentsystem.dao.UserRepository;
 import com.example.onlinedocumentsystem.domain.User;
+import com.example.onlinedocumentsystem.utils.AliyunSmsUtils;
 import com.example.onlinedocumentsystem.utils.MailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,7 +66,7 @@ public class UserService {
         //判断用户名、电话号码、邮箱未被使用
         if(user.getMail()!= null && !verifyByMail(user.getMail())) x = 1;
         else if(!verifyByUsername(user.getUsername())) x = 2;
-        else if(!verifyByPhoneNumber(user.getPhoneNumber())) x = 3;
+        else if(user.getPhoneNumber()!= null && !verifyByPhoneNumber(user.getPhoneNumber())) x = 3;
         //判断密码是否符合格式
         else if(user.getPassword().length() < 6 || user.getPassword().length() > 12) x= 4;
         else if(!StringUtils.isExistLower(user.getPassword())) x = 5;
@@ -72,6 +74,7 @@ public class UserService {
         else if (!StringUtils.isExistNum(user.getPassword()))    x = 7;
         return StringUtils.getRegisterMessage(x);
     }
+    //发送邮件
     public void sendMail(User user){
         try {
             int code = MailUtils.sendMail(user.getMail());
@@ -81,7 +84,7 @@ public class UserService {
             e.printStackTrace();
         }
     }
-    public User verify(int code){
+    public User verifyByMail(int code){
         User user = null;
         if(!userRepository.findByActivationCode(code).isEmpty()){
             user = userRepository.findByActivationCode(code).get(0);
@@ -89,5 +92,15 @@ public class UserService {
             userRepository.save(user);
         }
         return user;
+    }
+    public String sendMessage(String phoneNumber){
+        String code = null;
+        try {
+            code = AliyunSmsUtils.createVerifiedMessage(phoneNumber);
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }finally {
+            return code;
+        }
     }
 }
