@@ -56,7 +56,7 @@ public class UserService {
     public  User loginByUsername(String username,String password){
         User user = null;
         if(verifyByUsernameAndPassword(username,password)){
-            user = userRepository.findByMailAndPassword(username,password).get(0);
+            user = userRepository.findByUsernameAndPassword(username,password).get(0);
         }
         return user;
     }
@@ -84,7 +84,7 @@ public class UserService {
             e.printStackTrace();
         }
     }
-    public User verifyByMail(int code){
+    public User verifyByCode(int code){
         User user = null;
         if(!userRepository.findByActivationCode(code).isEmpty()){
             user = userRepository.findByActivationCode(code).get(0);

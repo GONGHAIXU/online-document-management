@@ -18,7 +18,11 @@
 	 
  　　<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
  
+	 <script src="js/register.js"></script>
      <script>
+	 function registerByMail(){
+		window.open("registerByMail.html", "_blank");
+	 }
          function register() {
              //jQuery写法
              var user = $('#user').val();
@@ -59,16 +63,27 @@
  
  <body>
  <!-- 注册表单 -->
-     <form style="margin-left:2000px;margin-top:500px;">
+	<img src="pictures\beverage-blank-break-997719.jpg" alt="test" />
+     <form style="margin-left:2000px;margin-top:-1330px;">
          <div class="form-group">
-             <label for="user" stype="display:inline;">账户：</label>
-             <input type="text" class="form-control" id="user" style="display:inline;width:200px;" autocomplete="off" />
+             <label for="username" stype="display:inline;">账号：</label>
+             <input type="text" class="form-control" id="username" style="display:inline;width:200px;" autocomplete="off" />
+         </div>
+		 <div class="form-group">
+             <label for="phoneNumber" stype="display:inline;">电话：</label>
+             <input type="text" class="form-control" id="phoneNumber" style="display:inline;width:200px;" autocomplete="off" />
          </div>
          <div class="form-group">
              <label for="password" style="display:inline;">密码：</label>
              <input type="text" class="form-control" id="password" style="display:inline;width:200px;" autocomplete="off" />
          </div>
-         <button type="submit" class="btn btn-primary" onclick="register()">确认注册</button>
+        <div class="form-group">
+             <label for="code" style="display:inline;">验证：</label>
+             <input type="text" class="form-control" id="code" style="display:inline;width:200px;" autocomplete="off" />
+			 <button  type="submit" class="btn btn-link" onclick="register()">获取验证码</button>
+         </div>
+		 <button style="margin-left:40px;margin-top:30px" type="submit" class="btn btn-default" onclick="registerByMail()">邮箱注册</button>
+		 <button style="margin-left:20px;margin-top:30px;" type="submit" class="btn btn-info" onclick="register()">确认注册</button>
      </form>
  </body>
  </html>

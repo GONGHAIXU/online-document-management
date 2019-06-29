@@ -42,8 +42,8 @@ public class UserController {
     @RequestMapping(value = "/loginByUsername",method = RequestMethod.POST)
     String loginByUsername(@RequestBody User user){
         JSONObject result = new JSONObject();
-        if(null != userService.loginByUsername(user.getMail(), user.getPassword())) {
-            result = (JSONObject) JSON.toJSON(userService.loginByUsername(user.getMail(), user.getPassword()));
+        if(null != userService.loginByUsername(user.getUsername(), user.getPassword())) {
+            result = (JSONObject) JSON.toJSON(userService.loginByUsername(user.getUsername(), user.getPassword()));
             result.put("result","true");
         }
         else{
@@ -73,12 +73,10 @@ public class UserController {
         result.put("result",registerMessage);
         return result.toJSONString();
     }
-    @RequestMapping(value = "/verifyByMail",method = RequestMethod.GET)
-    String verifyByMail(@RequestParam int code){
+    @RequestMapping(value = "/verify",method = RequestMethod.POST)
+    String verify(@RequestBody User user){
         JSONObject result = new JSONObject();
-        User user;
-        if (null != userService.verifyByMail(code)){
-            user = userService.verifyByMail(code);
+        if (null != userService.verifyByCode(user.getActivationCode())){
             result = (JSONObject) JSON.toJSON(user);
             result.put("result","true");
         }
@@ -86,9 +84,5 @@ public class UserController {
             result.put("result","false");
         }
         return result.toJSONString();
-    }
-    @RequestMapping(value = "/helloWorld",method = RequestMethod.GET)
-    String HelloWorld(){
-        return "helloWorld.html";
     }
 }
