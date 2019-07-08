@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8"/>
     <title>我的文件</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +14,11 @@
             if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
             }else {$(".navbar-fixed-top").removeClass("top-nav");}
         })
+		function setCookie(c_name, value, expiredays) {
+		 var exdate = new Date();
+		 exdate.setDate(exdate.getDate + expiredays);
+		 document.cookie = c_name + "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString()); 
+		 }
 		 function getCookie(c_name){
 		 if (document.cookie.length>0){
 			c_start=document.cookie.indexOf(c_name + "=")//检测这个cookie是否存在
@@ -32,14 +35,13 @@
 		 username = getCookie("username");
 		 if(username == null || username == "") {
 			alert("用户尚未登录，请先登录！");
-			location.assign("login.html");//如果用户还未登录，那么返回登录界面
+			window.open("login.html", "_blank");//如果用户还未登录，那么返回登录界面
 		 }
 		 } 		
 	</script>
 </head>
-<body  onload="checkIdentify()">
-<!--响应式导航条-->
-	<nav class="navbar navbar-default">
+<body>
+<nav class="navbar navbar-default">
 		<div class="container">
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -62,5 +64,60 @@
 			</div>
 		</div>
 	</nav>
+
+
+<div class="container">
+    <br>
+
+    <p>
+    <h2 align="center">我的文件</h2>
+
+
+    </p>
+    <div id="alerts"></div>
+    <div style="margin-top:30px"class="form-group">
+        <form id="uploadForm" enctype="multipart/form-data" class="form-inline">
+            <label for="file">上传文件：</label>
+            <input class="form-control" id="file" type="file" name="file"/>
+            <button id="upload" type="button" class="btn btn-primary">上传</button>
+        </form>
+	</div>
+    <div style="margin-top:20px"class="form-group">
+        <form class="form-inline" action="/filesearch">
+            <label for="search">搜索文件：</label>
+            <input type="text" class="form-control" id="search" name="name" placeholder="文件名" required>
+            <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+    </div>
+    </div>
+        </tbody>
+    </table>
+</div>
 </body>
+<script>
+    $('#upload').click(function () {
+        $.ajax({
+            url: 'http://localhost:8080/upload',
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false
+        }).done(function (res) {
+            console.log(res);
+            if (!res.success) {
+                alert('上传成功.');
+            } else {
+                alert(res.msg || '上传失败');
+            }
+        }).fail(function (res) {
+        });
+    });
+
+
+    function showmsg(mode, str) {
+        document.querySelector("#alerts").innerHTML = '<div class="alert alert-' + mode + ' fade-in"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>' + str + '</strong></div>'
+    }
+
+</script>
 </html>

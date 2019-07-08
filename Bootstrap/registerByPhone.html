@@ -19,6 +19,8 @@
  　　<script type="text/javascript" src="js/jquery-1.8.2.js"></script>
  
 	 <script src="js/register.js"></script>
+	 <script src="js/cookie.js"></script>
+	 <link media="all" type="text/css" rel="stylesheet" href="css/login.css">
      <script>
 	 function registerByMail(){
 		window.open("registerByMail.html", "_blank");
@@ -62,28 +64,34 @@
  </head>
  
  <body>
- <!-- 注册表单 -->
-	<img src="pictures\beverage-blank-break-997719.jpg" alt="test" />
-     <form style="margin-left:2000px;margin-top:-1330px;">
-         <div class="form-group">
-             <label for="username" stype="display:inline;">账号：</label>
-             <input type="text" class="form-control" id="username" style="display:inline;width:200px;" autocomplete="off" />
-         </div>
-		 <div class="form-group">
-             <label for="phoneNumber" stype="display:inline;">电话：</label>
-             <input type="text" class="form-control" id="phoneNumber" style="display:inline;width:200px;" autocomplete="off" />
-         </div>
-         <div class="form-group">
-             <label for="password" style="display:inline;">密码：</label>
-             <input type="text" class="form-control" id="password" style="display:inline;width:200px;" autocomplete="off" />
-         </div>
-        <div class="form-group">
-             <label for="code" style="display:inline;">验证：</label>
-             <input type="text" class="form-control" id="code" style="display:inline;width:200px;" autocomplete="off" />
-			 <button  type="submit" class="btn btn-link" onclick="register()">获取验证码</button>
-         </div>
-		 <button style="margin-left:40px;margin-top:30px" type="submit" class="btn btn-default" onclick="registerByMail()">邮箱注册</button>
-		 <button style="margin-left:20px;margin-top:30px;" type="submit" class="btn btn-info" onclick="register()">确认注册</button>
-     </form>
- </body>
+ <body>
+		<div class="container">
+			<div class="row">
+				<div class="test">
+					<form class="form-horizontal">
+					<span class="heading">手机号注册</span>	
+						<div class="form-group">
+							 <label for="username" style="display:inline;">账号：</label>
+							 <input type="text" class="form-control" id="username" style="display:inline;width:200px;" autocomplete="off" />
+						 </div>
+						 <div class="form-group">
+							 <label for="mail" style="display:inline;">邮箱：</label>
+							 <input type="text" class="form-control" id="mail" style="display:inline;width:200px;" autocomplete="off" />
+						 </div>
+						 <div class="form-group">
+							 <label for="password" style="display:inline;">密码：</label>
+							 <input type="text" class="form-control" id="password" style="display:inline;width:200px;" autocomplete="off" />
+						 </div>
+						  <div class="form-group">
+							 <label for="activationCode" style="display:inline;">验证：</label>
+							 <input type="text" class="form-control" id="activationCode" style="display:inline;width:200px;" autocomplete="off" />
+							 <button  type="submit" class="btn btn-link" style=" margin-left:-110px " onclick="verifyByMail()">获取验证码</button>
+						 </div>
+						 <button style="margin-left:40px;margin-top:30px" type="submit" class="btn btn-default" onclick="registerByMail()">邮箱注册</button>
+						 <button style="margin-left:20px;margin-top:30px;" type="submit" class="btn btn-info" onclick="register()">确认注册</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</body>
  </html>
