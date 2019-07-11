@@ -26,7 +26,6 @@ public class FileController {
     private FileService fileService;
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public String uploadData(@RequestParam("file") MultipartFile file){
-        SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd/");
         String fileName = file.getOriginalFilename();
         String suffix = fileName.substring(fileName.lastIndexOf('.'));
         String newFileName = new Date().getTime() + suffix;
