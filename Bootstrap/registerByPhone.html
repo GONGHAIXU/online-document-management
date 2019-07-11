@@ -2,7 +2,7 @@
   <html>
   <head>
      <meta charset="utf-8" />
-      <title>注册界面</title>
+      <title>手机号注册</title>
   
       <!-- 新 Bootstrap4 核心 CSS 文件 -->
       <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.1.0/css/bootstrap.min.css">
@@ -25,41 +25,6 @@
 	 function registerByMail(){
 		window.open("registerByMail.html", "_blank");
 	 }
-         function register() {
-             //jQuery写法
-             var user = $('#user').val();
-             var password = $('#password').val();
-             //JavaScript原生写法
-             //var user = document.getElementById('user').value;
-             //var password = document.getElementById('password').value;
-			
-             $.ajax({
-                 type: "post",  //post put get 等等
-                 url: "register.ashx",
-                 //编写注册功能时，要将异步设置为false（缺省为true）
-                 //如果async是ture,对于FireFox浏览器，会刷新掉alert()弹出框的内容
-                 //对于Chrome浏览器，第一次注册时会执行error的回调函数，输出“请求在连接过程中出现错误..”
-                 async:false,  
-                 data: {  //要传入ashx文件的数据
-                     "user": user,
-                     "password": password
-                 },
-                 success: function (data, textStatus) {
-                     //连接至ashx文件成功时，执行函数
-                     //data是从ashx文件返回来的信息，可以是字符串也可以是一个对象
-                     //如果data是字符串，则可以输出data的值
-                     //如果data是对象，则可以将这个对象的各属性值赋给其他变量
-                     //textStatus是表示状态的字符串，这里textStatus的值是"success"
-                     alert(data);
-                 },
-                 error: function (XMLHttpRequest, textStatus, errorThrown) {  //连接至ashx文件失败时，执行函数
-                     //XMLHttpRequest在这个例子里没有用到
-                     //textStatus是表示状态的字符串，这里textStatus的值是"error"
-                     //errorThrown包含连接失败的信息，可以输出查看
-                     alert("请求在连接过程中出现错误..\n" + errorThrown);
-                 }
-             });
-         }
      </script>
  </head>
  
@@ -75,8 +40,8 @@
 							 <input type="text" class="form-control" id="username" style="display:inline;width:200px;" autocomplete="off" />
 						 </div>
 						 <div class="form-group">
-							 <label for="mail" style="display:inline;">邮箱：</label>
-							 <input type="text" class="form-control" id="mail" style="display:inline;width:200px;" autocomplete="off" />
+							 <label for="phone" style="display:inline;">电话：</label>
+							 <input type="text" class="form-control" id="phone" style="display:inline;width:200px;" autocomplete="off" />
 						 </div>
 						 <div class="form-group">
 							 <label for="password" style="display:inline;">密码：</label>
@@ -87,7 +52,7 @@
 							 <input type="text" class="form-control" id="activationCode" style="display:inline;width:200px;" autocomplete="off" />
 							 <button  type="submit" class="btn btn-link" style=" margin-left:-110px " onclick="verifyByMail()">获取验证码</button>
 						 </div>
-						 <button style="margin-left:40px;margin-top:30px" type="submit" class="btn btn-default" onclick="registerByMail()">邮箱注册</button>
+						 <button style="margin-left:40px;margin-top:30px" type="submit" class="btn btn-default" onclick="registerByPhone()">电话注册</button>
 						 <button style="margin-left:20px;margin-top:30px;" type="submit" class="btn btn-info" onclick="register()">确认注册</button>
 					</form>
 				</div>

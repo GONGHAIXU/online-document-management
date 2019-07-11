@@ -1,7 +1,5 @@
-<!DOCTYPE html>
-<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="multipart/form-data; charset=utf-8"/>
     <title>我的文件</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,6 +14,11 @@
             if ($(".navbar").offset().top > 50) {$(".navbar-fixed-top").addClass("top-nav");
             }else {$(".navbar-fixed-top").removeClass("top-nav");}
         })
+		function setCookie(c_name, value, expiredays) {
+		 var exdate = new Date();
+		 exdate.setDate(exdate.getDate + expiredays);
+		 document.cookie = c_name + "=" + escape(value) + ((expiredays==null) ? "" : ";expires="+exdate.toGMTString()); 
+		 }
 		 function getCookie(c_name){
 		 if (document.cookie.length>0){
 			c_start=document.cookie.indexOf(c_name + "=")//检测这个cookie是否存在
@@ -32,13 +35,22 @@
 		 username = getCookie("username");
 		 if(username == null || username == "") {
 			alert("用户尚未登录，请先登录！");
-			location.assign("login.html");//如果用户还未登录，那么返回登录界面
+			window.open("login.html", "_blank");//如果用户还未登录，那么返回登录界面
+			}
 		 }
-		 } 		
+        function exportFile(){        
+	        var form=$("<form>");
+	        form.attr("style","display:none");
+	        form.attr("target","");
+	        form.attr("method","post");//提交方式为post
+	        form.attr("action","/downloadFile");//定义action
+	        $("body").append(form);
+	        form.submit();        
+ 		}
+		
 	</script>
 </head>
-<body  onload="checkIdentify()">
-<!--响应式导航条-->
+<body onload="checkIdentify()">
 	<nav class="navbar navbar-default">
 		<div class="container">
 			<div class="navbar-header">
@@ -62,5 +74,144 @@
 			</div>
 		</div>
 	</nav>
+
+
+<div class="container">
+    <br>
+
+    <p>
+    <h2 align="center">我的文件</h2>
+
+
+    </p>
+    <div id="alerts"></div>
+    <div style="margin-top:30px"class="form-group">
+        <form id="uploadForm" enctype="multipart/form-data" class="form-inline">
+            <label for="file">上传文件：</label>
+            <input class="form-control" id="file" type="file" name="file"/>
+            <button id="upload" type="button" class="btn btn-primary">上传</button>
+        </form>
+	</div>
+    <div style="margin-top:20px"class="form-group">
+        <form class="form-inline" action="/filesearch">
+            <label for="search">搜索文件：</label>
+            <input type="text" class="form-control" id="search" name="name" placeholder="文件名" required>
+            <button type="submit" class="btn btn-primary">搜索</button>
+        </form>
+    </div>
+    </div>
+        </tbody>
+    </table>
+</div>
+<div style="text-align: center;" width = "1000px">
+    <table class="table table-hover" width="100%" align="center" style="_margin-top:2%;">
+        <thead>
+        <tr>
+            <th style="text-align: center;">文件名</th>
+            <th style="text-align: center;">大小</th>
+            <th style="text-align: center;">上传人</th>
+            <th style="text-align: center;">上传日期</th>
+        </tr>
+        </thead>
+		<tbody id="test">
+		</tbody>
+    </table>
+</div>
+
+
+
+	
 </body>
+<script>
+    $('#upload').click(function () {
+        $.ajax({
+            url: 'http://localhost:8080/upload',
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false
+        }).done(function (res) {
+            console.log(res);
+            if (!res.success) {
+                alert('上传成功.');
+            } else {
+                alert(res.msg || '上传失败');
+            }
+        }).fail(function (res) {
+        });
+    });
+	function changeName(id){
+			var newName = prompt("请输入它的新名字");
+			if(newName != null && newName !=""){
+			console.log(newName);
+			var str={"id":id,
+					"fileName":newName}
+			$.ajax({
+				type: "POST",
+				contentType: "application/json",
+				url: "http://localhost:8080/changeName",
+				async:true,  
+				dataType: "json",
+				data: JSON.stringify(str),
+				success: function (data)  {
+					alert("出现未知错误");
+				},
+				error: function (error) {
+					alert("修改成功！");
+					location.reload();
+				}
+			});
+			}
+		}
+		function delete1(id){
+			var x = confirm("确定删除？");
+			if(x == true){
+				var str={"id":id}
+				$.ajax({
+					type: "POST",
+					contentType: "application/json",
+					url: "http://localhost:8080/delete",
+					async:true,  
+					dataType: "json",
+					data: JSON.stringify(str),
+					success: function (data)  {
+						alert("出现未知错误");
+					},
+					error: function (error) {
+						alert("删除成功！");
+						location.reload();
+					}
+				});
+				}
+		}
+	$(document).ready(function() {
+	var username = getcookie("username");
+	var str={"username":username}
+			$.ajax({
+			type: "POST",
+			contentType: "application/json",
+			url: "http://localhost:8080/getAllFile",
+			async:true,  
+			dataType: "json",
+			data: JSON.stringify(str),
+			success: function (data) {
+				var html = "";
+                for(var i=0;i<data.length;i++){    //遍历data数组
+                        var f = data[i];
+						var id = f.id;
+						var path = "c:/test/" +f.uploadPerson + "/" + f.fileName;
+                        html +="<tr><td align=\"center\" valign=\"middle\">"+f.fileName+"</td>"+"<td align=\"center\" valign=\"middle\">"+f.size+"</td>"+"<td align=\"center\" valign=\"middle\">"+f.uploadPerson+"</td>"+"<td align=\"center\" valign=\"middle\">"+f.uploadTime+"</td>";		
+						html += "<td><button id=\"rename\" type=\"button\" class=\"btn btn-primary\" onclick=\"changeName(" + id + ")\">重命名</button>";   
+						html += "<button style = \"margin-left:15px;\"id=\"delete\" type=\"button\" class=\"btn btn-danger\" onclick=\"delete1(" + id + ")\">删除</button>";	
+						html += "<a href=\"" + path + "\"style = \"margin-left:15px;\" >点击下载</a></td></tr>"
+                    }
+                    $("#test").html(html); //在html页面id=test的标签里显示html内容
+				},
+			error: function (error) {
+				alert("数据连接出错，请重试！");
+				}
+			 });
+		});
+</script>
 </html>
